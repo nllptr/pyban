@@ -19,8 +19,8 @@ class BoardList:
     def __str__(self):
         return self.__repr__()
 
-    def add_board(self):
-        self.boards.append(Board())
+#    def add_board(self):
+#        self.boards.append(Board())
 
     def save(self):
         directory = os.path.expanduser("~") + "/.pyban"
@@ -48,8 +48,15 @@ class BoardList:
     def get_board_list(self):
         return self.boards
 
+    def get_board(self, index):
+        return self.boards[index]
+
     def add_board(self, name="New Board"):
         self.boards.append(Board(name))
+
+    def remove_board(self, index):
+        if self.active_board == self.boards.pop(index):
+            self.active_board = None
 
     def set_active(self, index):
         self.active_board = self.boards[index]

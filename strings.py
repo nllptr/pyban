@@ -14,3 +14,17 @@ use [n]     Makes board n the active board.
 show        Prints the active board.
 name        Changes the name of the active board.
 """
+
+format_use = "use [board number]"
+
+format_name = "name [new board name]"
+
+format_add = """
+add board [board name]
+add col [column name]
+add task [task name]"""
+
+format_del = """
+del board [board number]
+del col [col number]
+del task ###############"""
