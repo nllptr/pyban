@@ -8,6 +8,58 @@ class BoardException(PyBanException): pass
 class ColumnException(PyBanException): pass
 class TaskException(PyBanException): pass
 
+class BoardList:
+    def __init__(self):
+        self.boards = []
+        self.active_board = None
+
+    def __repr__(self):
+        return str(self.boards)
+
+    def __str__(self):
+        return self.__repr__()
+
+    def add_board(self):
+        self.boards.append(Board())
+
+    def save(self):
+        directory = os.path.expanduser("~") + "/.pyban"
+        try:
+            os.mkdir(directory)
+        except FileExistsError:
+            pass
+        with open(directory + "/boards.pk", "wb") as f:
+            pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
+
+    def load(self):
+        directory = os.path.expanduser("~") + "/.pyban"
+        try:
+            with open(directory + "/boards.pk", "rb") as f:
+                loaded = pickle.load(f)
+                self.boards = loaded.boards
+                self.active_board = loaded.active_board
+        except FileNotFoundError:
+            try:
+                os.mkdir(os.path.expanduser("~") + "/.pyban")
+            except FileExistsError:
+                pass
+            return self
+
+    def get_board_list(self):
+        return self.boards
+
+    def add_board(self, name="New Board"):
+        self.boards.append(Board(name))
+
+    def set_active(self, index):
+        self.active_board = self.boards[index]
+
+    def get_active(self):
+        if self.active_board == None:
+            return None
+        else:
+            return self.active_board
+
 class Board:
 
     def __init__(self, name="New Board"):
@@ -19,7 +71,10 @@ class Board:
         self.columns.append(Column("Done"))
 
     def __repr__(self):
-        pass
+        return "[" + self.name + ": " + self.description + "]"
+
+    def __str__(self):
+        return self.__repr__()
 
     def save(self):
         directory = os.getcwd() + "/.pyban"
