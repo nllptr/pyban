@@ -1,7 +1,4 @@
 list boards
-make board active
-create new board
-delete board
 print board
 add task
 
