@@ -111,12 +111,12 @@ class Board:
     def get_description(self):
         return self.description
 
-    def add_column(self, index, column):
-        return_value = False
-        if isinstance(column, Column):
-            return_value = True
-            self.columns.insert(index, column)
-        return return_value
+    def add_column(self, index, name="New Column"):
+        try:
+            self.columns.insert(int(index), Column(name))
+            return True
+        except IndexError:
+            return False
 
     def remove_column(self, index):
         self.columns.pop(index)
@@ -158,12 +158,8 @@ class Column:
     def get_tasks(self):
         return self.tasks
 
-    def add_task(self, task):
-        return_value = False
-        if isinstance(task, Task):
-            return_value = True
-            self.tasks.append(task)
-        return return_value
+    def add_task(self, name="New Task"):
+        self.tasks.append(Task(name))
 
     def remove_task(self, index):
         return_task = None

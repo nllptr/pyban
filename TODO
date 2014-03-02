@@ -1,4 +1,4 @@
-list boards
-print board
 add task
-
+remove task
+edit task
+board name and description in printout
