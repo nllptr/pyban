@@ -20,6 +20,8 @@ def _print_header(board, width=80):
 
     print("")
 
+    print(__get_board_heading(width - 1))
+
     print(__get_header_divider(columns))
 
     print(__get_names_line(board, columns))
@@ -115,6 +117,12 @@ def __get_header_divider(columns):
 
     return return_string
 
+def __get_board_heading(width):
+    return_string = board_list.get_active().get_name() + ": " + board_list.get_active().get_description()
+    width -= len(return_string)
+    width = width // 2
+    return " " + (" " * width) + return_string
+
 def _print_board_list():
     for i in range(0, len(board_list.get_board_list())):
         print(str(i + 1) + ": " + str(board_list.get_board_list()[i]))
@@ -192,9 +200,7 @@ if __name__ == "__main__":
 
         # DEL
         elif command == "del":
-            if len(parameters) > 3:
-                print("Format: " + strings.format_del)
-            elif len(parameters) < 2:
+            if len(parameters) == 0:
                 print("Format: " + strings.format_del)
             elif parameters[0] == "board":
                 # Delete board
@@ -207,19 +213,22 @@ if __name__ == "__main__":
 
             elif parameters[0] == "col":
                 # Delete column
-                try:
-                    print("Delete column " + board_list.get_active().get_column(int(parameters[1]) - 1).get_name() + "?")
-                    if input("y/N: ") == "y":
-                        board_list.get_active().remove_column(int(parameters[1]) - 1)
-                except IndexError:
+                if len(parameters) != 2:
                     print("Format: " + strings.format_del_col)
+                else:
+                    try:
+                        print("Delete column " + board_list.get_active().get_column(int(parameters[1]) - 1).get_name() + "?")
+                        if input("y/N: ") == "y":
+                            board_list.get_active().remove_column(int(parameters[1]) - 1)
+                    except IndexError:
+                        print("Format: " + strings.format_del_col)
             elif parameters[0] == "task":
                 # Delete task
                 if len(parameters) != 3:
                     print("Format: " + strings.format_del_task)
                 else:
                     try:
-                        print("Delete task " + str(board_list.get_board(int(parameters[1]) - 1).tasks[int(parameters[2]) - 1].get_name()))
+                        print("Delete task " + str(board_list.get_active().get_column(int(parameters[1]) - 1).tasks[int(parameters[2]) - 1].get_name()))
                         if input("y/N: ") == "y":
                             board_list.get_active().get_column(int(parameters[1]) - 1).remove_task(int(parameters[2]) - 1)
                     except ValueError:
@@ -290,6 +299,21 @@ if __name__ == "__main__":
                 else:
                     #show error
                     pass
+
+        # TASK
+        elif command == "task":
+            if len(parameters) < 5:
+                print("Format: " +  strings.format_task)
+            elif parameters[0] == "set":
+                try:
+                    if parameters[1] == "name":
+                        board_list.get_active().get_column(int(parameters[2]) - 1).tasks[int(parameters[3]) - 1].set_name(" ".join(parameters[4:]))
+                    if parameters[1] == "desc":
+                        board_list.get_active().get_column(int(parameters[2]) - 1).tasks[int(parameters[3]) - 1].set_description(" ".join(parameters[4:]))
+                except IndexError:
+                    print("Format: " + strings.format_task_set)
+                except ValueError:
+                    print("Format: " + strings.format_task_set)
 
         # MOVE
         elif command == "move":

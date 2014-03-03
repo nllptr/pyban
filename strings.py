@@ -1,6 +1,6 @@
 name = "PyBan"
 
-version = "0.1"
+version = "0.2"
 
 unknown_command = "Unknown command. Type \"help\" to see all commands."
 
@@ -13,30 +13,42 @@ Shows this help file.
 version
 Shows the version number.
 
-use <integer>
-Make board <integer> the active board. Use without the parameter to get a list of available board numbers.
+use <integer>                       Make board <integer> the active board.
+                                    Use without the parameter to get a list
+                                    of available board numbers.
 
-add board <string>
-Adds a new board to the board list. The new board will have the name <string> if it is provided, "New Board" otherwise.
+add board <string>                  Adds a new board to the board list. The
+                                    new board will have the name <string> if
+                                    it is provided, "New Board" otherwise.
 
-add col <integer> <name>
-Adds a new column to the active board.
-<integer> is required and is the place where the column should be inserted, starting from 1.
-<name> is the optional column name. If left out, a default value will be used.
+add col <integer> <name>            Adds a new column to the active board.
+                                    
+                                    <integer> is required and is the place
+                                    where the column should be inserted,
+                                    starting from 1.
+
+                                    <name> is the optional column name. If
+                                    left out, a default value will be used.
 
 
-add [board|col|task] <string>
-Adds a new board, column or task and gives it the provided name. To add a new column or task, an active board must be set (see the "use" command). If no name is provided, a default name will be set.
+add [board|col|task] <string>       Adds a new board, column or task and
+                                    gives it the provided name. To add a
+                                    new column or task, an active board must
+                                    be set (see the "use" command). If no
+                                    name is provided, a default name will
+                                    be set.
 
-show
-Prints the active board.
+show                                Prints the active board.
 
-board set [name|desc] <string>
-Sets the active board's name or description to the provided value.
+board set [name|desc] <string>      Sets the active board's name or
+                                    description to the provided value.
 
 col set [name|desc|sub] <column number> <name|description>
-Sets the name, description or, sub board of the column.
-name and desc options expect strings, while sub expects a board number.
+                                    Sets the name, description or, sub board
+                                    of the column.
+
+                                    <name> and <desc> options expect strings,
+                                    while <sub> expects a board number.
 """
 
 format_use = "use [board number]"
@@ -68,3 +80,7 @@ format_show_col = "show <col>"
 format_show_task = "show <col> <row>"
 
 format_move = "move <from column> <task number> <to column>"
+
+format_task = "task set [name|desc] <column> <row> <name/description>"
+
+format_task = "task set [name|desc] <column> <row> <name/description>"
