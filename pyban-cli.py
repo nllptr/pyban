@@ -5,8 +5,10 @@ import strings
 
 def _print_header(board, width=80):
 
-    column = (width - 1) // len(board.get_columns())
-    remains = (width - 1) % len(board.get_columns())
+    # Compensate for task number and first divider (n|, the leftmost
+    # characters.
+    column = (width - 2) // len(board.get_columns())
+    remains = (width - 2) % len(board.get_columns())
     columns = []
 
     # Create columns list (spread evenly, remaining to the left)
@@ -17,6 +19,7 @@ def _print_header(board, width=80):
             remains -= 1
 
     print("")
+
     print(__get_header_divider(columns))
 
     print(__get_names_line(board, columns))
@@ -30,7 +33,7 @@ def _print_header(board, width=80):
             max_tasks = len(col.get_tasks())
 
     for i in range(max_tasks):
-        print("|", end="")
+        print(str(i + 1) + "|", end="")
         for column_index in range(len(board.get_columns())):
             if len(board.get_column(column_index).get_tasks()) <= i:
                 __print_task(column_index, columns[column_index])
@@ -65,9 +68,10 @@ def __print_task(column_index, column_width, task=None):
         print(return_string, end="")
 
 def __get_names_line(board, columns):
-    return_string = "|"
+    return_string = " |"
 
     for i in range(len(board.get_columns())):
+        return_string += " " + str(i + 1) + ":"
         return_string += ___get_column_header(board, columns, i)
         return_string += "|"
 
@@ -76,7 +80,8 @@ def __get_names_line(board, columns):
 def ___get_column_header(board, columns, index):
 
     # Compensate for one empty space at each end of the string
-    string_width = columns[index] - 2
+    # and ' n:' at the beginning.
+    string_width = columns[index] - 5
     letters_width = len(board.get_column(index).get_name())
     return_string = " "
 
@@ -94,7 +99,7 @@ def ___get_column_header(board, columns, index):
 
 def __get_header_divider(columns):
     
-    return_string = ""
+    return_string = " "
 
     # Print first divider
     return_string += "+"
@@ -169,9 +174,12 @@ if __name__ == "__main__":
                 if len(parameters[1:]) == 0:
                     print("Format: " + strings.format_add)
                 elif len(parameters[1:]) == 1:
-                    board_list.get_active().add_column(int(parameters[1]) - 1)
+                    try:
+                        board_list.get_active().add_column(int(parameters[1]) - 1)
+                    except ValueError:
+                        print("Format: " + strings.format_add)
                 else:
-                    board_list.get_active().add_column(int(parameters[1]) - 1, parameters[2:])
+                    board_list.get_active().add_column(int(parameters[1]) - 1, " ".join(parameters[2:]))
             elif parameters[0] == "task":
                 # Create task in active board
                 try:
@@ -184,7 +192,9 @@ if __name__ == "__main__":
 
         # DEL
         elif command == "del":
-            if len(parameters) != 2:
+            if len(parameters) > 3:
+                print("Format: " + strings.format_del)
+            elif len(parameters) < 2:
                 print("Format: " + strings.format_del)
             elif parameters[0] == "board":
                 # Delete board
@@ -205,11 +215,40 @@ if __name__ == "__main__":
                     print("Format: " + strings.format_del_col)
             elif parameters[0] == "task":
                 # Delete task
-                pass
+                if len(parameters) != 3:
+                    print("Format: " + strings.format_del_task)
+                else:
+                    try:
+                        print("Delete task " + str(board_list.get_board(int(parameters[1]) - 1).tasks[int(parameters[2]) - 1].get_name()))
+                        if input("y/N: ") == "y":
+                            board_list.get_active().get_column(int(parameters[1]) - 1).remove_task(int(parameters[2]) - 1)
+                    except ValueError:
+                        print("Format: " + strings.format_del_task)
+                    except IndexError:
+                        print("Format: " + strings.format_del_task)
 
         # SHOW
         elif command == "show":
-            _print_header(board_list.get_active())
+            if len(parameters) == 0:
+                _print_header(board_list.get_active())
+            elif len(parameters) == 1:
+                try:
+                    print(board_list.get_active().get_column(int(parameters[0]) - 1).get_name())
+                    print(board_list.get_active().get_column(int(parameters[0]) - 1).get_description())
+                except ValueError:
+                    print("Format: " + strings.format_show_col)
+                except IndexError:
+                    print("Format: " + strings.format_show_col)
+            elif len(parameters) == 2:
+                try:
+                    print(board_list.get_active().get_column(int(parameters[0]) - 1).get_tasks()[int(parameters[1]) - 1].get_name())
+                    print(board_list.get_active().get_column(int(parameters[0]) - 1).get_tasks()[int(parameters[1]) - 1].get_description())
+                except ValueError:
+                    print("Format: " + strings.format_show_task)
+                except IndexError:
+                    print("Format: " + strings.format_show_col)
+            else:
+                print("Format: " + strings.format_show)
 
         # BOARD
         elif command == "board":
@@ -251,7 +290,19 @@ if __name__ == "__main__":
                 else:
                     #show error
                     pass
-                
+
+        # MOVE
+        elif command == "move":
+            if len(parameters) != 3:
+                print("Format: " + strings.format_move)
+            else:
+                try:
+                    board_list.get_active().move_task(int(parameters[0]) - 1, int(parameters[1]) - 1, int(parameters[2]) - 1)
+                except ValueError:
+                    print("Format: " + strings.format_move)
+                except IndexError:
+                    print("Format: " + strings.format_move)
+
         # INVALID INPUT
         else:
             print(strings.unknown_command)

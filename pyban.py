@@ -132,6 +132,9 @@ class Board:
     def get_columns(self):
         return self.columns
 
+    def move_task(self, from_col, task_index, to_col):
+        self.columns[to_col].tasks.append(self.columns[from_col].remove_task(task_index))
+
 class Column:
 
     def __init__(self, name="New Column"):

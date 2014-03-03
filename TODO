@@ -1,4 +1,5 @@
-add task
+move task
 remove task
 edit task
 board name and description in printout
+clean up code (args)

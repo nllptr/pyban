@@ -51,6 +51,8 @@ format_del_board = "del board <board>"
 
 format_del_col = "del col <column>"
 
+format_del_task = "del task <column> <row>"
+
 format_board = "board set [name|desc] <string>"
 
 format_col = "col set [name|desc|sub] <column> <string>"
@@ -58,3 +60,11 @@ format_col = "col set [name|desc|sub] <column> <string>"
 format_col_set_name = "col set <column> <name>"
 
 format_col_set_desc = "col set <column> <description>"
+
+format_show = "show | show <col> | show <col> <row>"
+
+format_show_col = "show <col>"
+
+format_show_task = "show <col> <row>"
+
+format_move = "move <from column> <task number> <to column>"
