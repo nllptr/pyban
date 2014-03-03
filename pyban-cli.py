@@ -47,12 +47,13 @@ def _print_header(board, width=80):
     print(__get_header_divider(columns))
 
     print("")
-    print("\n" + str(columns))
-    for cols in board.get_columns():
-        for tasks in cols.get_tasks():
-            print(tasks.get_name())
 
-    print(max_tasks)
+    #print("\n" + str(columns))
+    #for cols in board.get_columns():
+    #    for tasks in cols.get_tasks():
+    #        print(tasks.get_name())
+
+    #print(max_tasks)
 
 def __print_task(column_index, column_width, task=None):
     if task == None:
