@@ -1,0 +1,6 @@
+=========
+PyBan FAQ
+=========
+
+What is PyBan?
+PyBan is an API for managing Kanban boards.
