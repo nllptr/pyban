@@ -7,9 +7,6 @@ class InvalidDirectoryError(Exception):
 class Project:
 
     def __init__(self, project_name):
-#        if not path.isdir(project_dir):
-#            raise InvalidDirectoryError
-#        self.project_dir = project_dir
         self.project_name = project_name
         self.boards = []
         self.active_board = None
