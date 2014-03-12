@@ -2,8 +2,6 @@
 
 import unittest
 
-from classes import *
-
 class TestTask(unittest.TestCase):
     """
     This class tests the Task class
@@ -113,10 +111,6 @@ class TestProject(unittest.TestCase):
     """
 
     def test_new(self):
-#        with self.assertRaises(InvalidDirectoryError):
-#            Project("sdflksdjlkdf")
-#        project1 = Project("/home/simon")
-#        project2 = Project()
         project = Project("New project")
         self.assertEqual("New project", project.project_name)
         with self.assertRaises(TypeError):
@@ -139,6 +133,3 @@ class TestProject(unittest.TestCase):
         project = Project("lol")
         repr_string = "<Board: [project_name: lol], [boards: []], [active_board: None]>"
         self.assertEqual(repr_string, repr(project))
-
-if __name__ == "__main__":
-    unittest.main()
