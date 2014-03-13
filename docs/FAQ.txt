@@ -3,4 +3,10 @@ PyBan FAQ
 =========
 
 What is PyBan?
-PyBan is an API for managing Kanban boards.
+--------------
+PyBan is a command line application for managing Kanban boards.
+
+Where is everything saved?
+--------------------------
+At the moment, data is pickled and saved into the .pyban folder in the folder
+where you ran pyban. Sort of git-style, because I like that.

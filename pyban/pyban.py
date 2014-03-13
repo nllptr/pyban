@@ -15,7 +15,6 @@ def main(stdscr):
 
     while True:
         stdscr.clear()
-        #max_yx = stdscr.getmaxyx()
 
 
         ##############################
@@ -25,6 +24,7 @@ def main(stdscr):
 
         if state == constants.PROJECT_INFO:
             print_project_info(stdscr, project)
+            print_menu(stdscr, strings.MENU_PROJECT_INFO)
 
         elif state == constants.SET_PROJECT_NAME:
             print_project_info(stdscr, project)
@@ -55,12 +55,11 @@ def main(stdscr):
         ##############################
         # Board view
         elif state == constants.BOARD:
-            if project.active_board == None:
+            if project.active_board is None:
                 state = constants.PROJECT_INFO
                 continue
             else:
                 state = print_board(stdscr, project)
-                continue
             
 
         ############################## 
@@ -79,8 +78,11 @@ def main(stdscr):
                 state = constants.SET_ACTIVE_BOARD
             elif key == ord("n"):
                 state = constants.SET_PROJECT_NAME
-            elif key == 27:
+            elif key == ord(" "):
                 state = constants.BOARD
+        elif state == constants.BOARD:
+            if key == ord(" "):
+                state = constants.PROJECT_INFO
 
 def get_input(stdscr, message):
     """
@@ -101,15 +103,47 @@ def print_board(stdscr, project):
     Prints the active board.
     """
     board = project.boards[project.active_board]
-    stdscr.addstr(1, 1, project.project_name + ": " + board.name)
+    max_yx = stdscr.getmaxyx()
+    width_without_vlines = max_yx[1] - 1 - len(board.columns)
+    columns = [width_without_vlines // len(board.columns)] * len(board.columns)
+    remains = width_without_vlines % len(board.columns)
+    counter = 0
+    while remains > 0:
+        columns[counter] += 1
+        remains -= 1
+        counter += 1
+        if counter == 4:
+            counter = 0
+
+    # PRINT BOARD HEADER
+    print_box(stdscr, 0, 0, ": ".join([project.project_name, board.name]))
     if len(board.columns) == 0:
         # print error message / go to create columns
         pass
     else:
-        # print columns
-        pass
-    stdscr.getch()
-    return constants.PROJECT_INFO
+        # PRINT COLUMN HEADERS
+        stdscr.addch(3, 0, curses.ACS_ULCORNER)
+        for column in columns:
+            for i in range(column):
+                stdscr.addch(curses.ACS_HLINE)
+            stdscr.addch(curses.ACS_TTEE)
+        stdscr.addch(curses.ACS_TTEE)
+        stdscr.addch(3, max_yx[1] - 1, curses.ACS_URCORNER)
+        stdscr.addch(curses.ACS_VLINE)
+        for index, column in enumerate(columns):
+            print_string = "".join([" ", board.columns[index].name, " "])
+            if len(print_string) > column:
+                print_string = print_string[:column]
+            else:
+                print_string = "".join([print_string, " " * (column - len(print_string))])
+            stdscr.addstr(print_string)
+            stdscr.addch(curses.ACS_VLINE)
+        stdscr.addch(curses.ACS_LTEE)
+        for column in columns:
+            for i in range(column):
+                stdscr.addch(curses.ACS_HLINE)
+            stdscr.addch(curses.ACS_PLUS)
+        stdscr.addch(5, max_yx[1] - 1, curses.ACS_RTEE)
 
 def print_project_info(stdscr, project):
     """
@@ -118,11 +152,28 @@ def print_project_info(stdscr, project):
     stdscr.addstr(1, 1, project.project_name)
     for index, board in enumerate(project.boards):
         if index == project.active_board:
-            stdscr.addstr(index + 3, 1, "* " + str(project.boards[index]))
+            stdscr.addstr(index + 3, 2, "".join(["* ", str(project.boards[index])]))
         else:
-            stdscr.addstr(index + 3, 1, "  " + str(project.boards[index]))
-    print_menu(stdscr, strings.MENU_PROJECT_INFO)
+            stdscr.addstr(index + 3, 2, "".join(["  ", str(project.boards[index])]))
 
+def print_box(stdscr, y, x, print_string):
+    """
+    Prints a string inside a box with its upper left corners
+    at the given coordinates.
+    """
+    stdscr.addch(y, x, curses.ACS_ULCORNER)
+    print_chars = 1 + len(print_string) + 1
+    for i in range(print_chars):
+        stdscr.addch(curses.ACS_HLINE)
+    stdscr.addch(curses.ACS_URCORNER)
+    stdscr.addch(y + 1, 0, curses.ACS_VLINE)
+    stdscr.addstr(y + 1, 2, print_string)
+    stdscr.addstr(" ")
+    stdscr.addch(curses.ACS_VLINE)
+    stdscr.addch(y + 2, 0, curses.ACS_LLCORNER)
+    for i in range(print_chars):
+        stdscr.addch(curses.ACS_HLINE)
+    stdscr.addch(curses.ACS_LRCORNER)
 
 def print_menu(stdscr, menu):
     """
@@ -135,10 +186,13 @@ def print_menu(stdscr, menu):
     offset = 0
     for item in menu:
         split_text = item.split("(")
+        # If there is a split, split at the closing parenthesis as well.
         if len(split_text) > 1:
             split_text[1] = split_text[1].split(")")
+        # If the first part is longer than 0, print it in normal text.
         if len(split_text[0]) > 0:
             stdscr.addstr(max_yx[0] - 1, 1 + offset, split_text[0])
+        # Print the underlined part.
         stdscr.addstr(max_yx[0] - 1, 1 + offset + len(split_text[0]), split_text[1][0], curses.A_UNDERLINE)
         if len(split_text[1][1]) > 0:
             stdscr.addstr(max_yx[0] - 1, 1 + offset + len(split_text[0]) + len(split_text[1][0]), split_text[1][1])
@@ -150,18 +204,17 @@ def select_board(stdscr, project):
     is able to select one board with up/down keys or j/k and
     the enter key.
     """
-    if project.active_board == None:
+    if project.active_board is None:
         selection = 0
     else:
         selection = project.active_board
-    print_project_info(stdscr, project)
-    print_menu(stdscr, strings.MENU_SELECT)
-    stdscr.addstr(selection + 3, 3, str(project.boards[selection]), curses.A_REVERSE)
 
     key = 0
     while key != 10:
+        stdscr.clear()
         print_project_info(stdscr, project)
-        stdscr.addstr(selection + 3, 3, str(project.boards[selection]), curses.A_REVERSE)
+        print_menu(stdscr, strings.MENU_SELECT)
+        stdscr.addstr(selection + 3, 4, str(project.boards[selection]), curses.A_REVERSE)
         key = stdscr.getch()
         if selection == 0:
             if key in (curses.KEY_DOWN, ord("j")):

@@ -5,10 +5,10 @@ SET_PROJECT_NAME = "Set project (n)ame"
 QUIT = "(Q)uit"
 MENU_PROJECT_INFO = [ADD_BOARD, SET_ACTIVE, SET_PROJECT_NAME, QUIT]
 
-SELECT_UP = "Up arrow or (k)"
-SELECT_DOWN = "Down arrow or (j)"
-SELECT_CONFIRM = "Enter"
-MENU_SELECT = [SELECT_DOWN, SELECT_UP, SELECT_CONFIRM]
+SELECT_UP = "Up (k)" # NOT USED
+SELECT_DOWN = "Down[k]" # NOT USED
+SELECT_CONFIRM = "Select()" # NOT USED
+MENU_SELECT = ["j/k/<Enter>()"]
 
 # DIALOG TEXTS
 SET_PROJECT_NAME = "Project name: "

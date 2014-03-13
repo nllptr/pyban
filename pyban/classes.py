@@ -37,10 +37,13 @@ class Project:
             return True
 
     def __repr__(self):
-        return "<Board: [project_name: " + self.project_name \
-            + "], [boards: " + str(self.boards) \
-            + "], [active_board: " + str(self.active_board) \
-            + "]>"
+        return "".join(["<Board: [project_name: ",
+                        self.project_name,
+                        "], [boards: ",
+                        str(self.boards),
+                        "], [active_board: ",
+                        str(self.active_board),
+                        "]>"])
 
     def __str__(self):
         return self.project_name
@@ -56,13 +59,16 @@ class Board:
         self.columns.append(Column("Done"))
 
     def __repr__(self):
-        return "<Board: [name: " + self.name \
-            + "], [description: " + self.description \
-            + "], [columns: " + self.columns \
-            + "]>"
+        return "".join(["<Board: [name: ",
+                        self.name,
+                        "], [description: ",
+                        self.description,
+                        "], [columns: ",
+                        self.columns,
+                        "]>"])
 
     def __str__(self):
-        return self.name + ": " + self.description
+        return ": ".join([self.name, self.description])
 
     def switch_columns(self, index1, index2):
         """
@@ -86,14 +92,18 @@ class Column:
         self.sub_board = None
 
     def __repr__(self):
-        return "<Column: [name: " + self.name \
-        + "], [description: " + self.description \
-        + "], [tasks: " + str(self.tasks) \
-        + "], [sub_board: " + str(self.sub_board) \
-        + "]>"
+        return "".join(["<Column: [name: ",
+                        self.name,
+                        "], [description: ",
+                        self.description,
+                        "], [tasks: ",
+                        str(self.tasks),
+                        "], [sub_board: ",
+                        str(self.sub_board),
+                        "]>"])
 
     def __str__(self):
-        return self.name + ": " + self.description
+        return ": ".join([self.name, self.description])
 
 class Task:
 
@@ -102,9 +112,11 @@ class Task:
         self.description = description
 
     def __repr__(self):
-        return "<Task: [name: " + self.name \
-            + "], [description: " + self.description \
-            + "]>"
+        return "".join(["<Task: [name: ",
+                        self.name,
+                        "], [description: ",
+                        self.description,
+                        "]>"])
 
     def __str__(self):
-        return self.name + ": " + self.description
+        return ": ".join([self.name, self.description])

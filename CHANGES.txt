@@ -1,2 +1,2 @@
-v0.2.0, 2014-03-04 -- Initial release.
+v0.2.0, 2014-03-04 -- Initial commit.
 
