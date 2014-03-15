@@ -1,18 +1,76 @@
+# =====
 # MENUS
-ADD_BOARD = "Add (b)oard"
-SET_ACTIVE = "Set (a)ctive board"
-SET_PROJECT_NAME = "Set project (n)ame"
+# =====
+#
+# Menu texts are defined as a list of strings. The part of each string
+# that should be underlined is put between parentheses.
+#
+# General menu items
+# ------------------
 QUIT = "(Q)uit"
-MENU_PROJECT_INFO = [ADD_BOARD, SET_ACTIVE, SET_PROJECT_NAME, QUIT]
+PROJECT_SETTINGS = "(P)roject"
 
+# Project Info
+# ------------
+SET_PROJECT_NAME = "Project (n)ame"
+ADD_BOARD = "(A)dd board"
+REMOVE_BOARD = "(R)emove board"
+SET_ACTIVE = "Active (b)oard"
+MENU_PROJECT_INFO = [SET_PROJECT_NAME, ADD_BOARD, REMOVE_BOARD, SET_ACTIVE, QUIT]
+
+# Board Info
+# ----------
+SET_BOARD_NAME = "Board (n)ame"
+SET_BOARD_DESCRIPTION = "Board (d)escription"
+ADD_COLUMN = "(A)dd column"
+REMOVE_COLUMN = "(R)emove column"
+MENU_BOARD_INFO = [SET_BOARD_NAME, SET_BOARD_DESCRIPTION, ADD_COLUMN, REMOVE_COLUMN, QUIT]
+
+# Column Info
+# -----------
+SET_COLUMN_NAME = "Column (n)ame"
+SET_COLUMN_DESCRIPTION = "Column (d)escription"
+SET_COLUMN_TASK_LIMIT = "Column task (l)imit"
+MENU_COLUMN_INFO = [SET_COLUMN_NAME, SET_COLUMN_DESCRIPTION, SET_COLUMN_TASK_LIMIT, QUIT]
+
+# Selection keys
+# --------------
 SELECT_UP = "Up (k)" # NOT USED
 SELECT_DOWN = "Down[k]" # NOT USED
 SELECT_CONFIRM = "Select()" # NOT USED
-MENU_SELECT = ["j/k/<Enter>()"]
+MENU_SELECT = ["j/k or arrow keys. Confirm with <Enter>"]
+
+# Board
+# -----
+#MENU_BOARD = ["h/j/k/l or arrow keys. Make selection with <Space>"]
+SELECT_BOARD_SETTINGS = "(S)ettings"
+SELECT_BOARD = [SELECT_BOARD_SETTINGS, PROJECT_SETTINGS, QUIT]
+
+SELECT_COLUMN_SETTINGS = "(S)ettings"
+SELECT_COLUMN_MOVE = "(M)ove column"
+SELECT_COLUMN = [SELECT_COLUMN_SETTINGS, SELECT_COLUMN_MOVE, PROJECT_SETTINGS, QUIT]
+
+SELECT_TASK_SETTINGS = "(S)ettings"
+SELECT_TASK_MOVE = "(M)ove task"
+SELECT_TASK = [SELECT_TASK_SETTINGS, SELECT_TASK_MOVE, PROJECT_SETTINGS, QUIT]
+
+MOVE_LEFT = "Left (h)"
+MOVE_RIGHT = "Right (l)"
+MENU_MOVE_TASK = [MOVE_LEFT, MOVE_RIGHT]
 
 # DIALOG TEXTS
-SET_PROJECT_NAME = "Project name: "
-NEW_BOARD = "Board name (default 'New board'): "
+PROMPT_PROJECT_NAME = "Project name: "
+PROMPT_NEW_BOARD = "Board name (default 'New Board'): "
+PROMPT_BOARD_NAME = "Board name: "
+PROMPT_BOARD_DESCRIPTION = "Board description: "
+PROMPT_ADD_COLUMN = "Column name (default 'New Column'): "
+PROMPT_COLUMN_NAME = "Column name: "
+PROMPT_COLUMN_DESCRIPTION = "Column description: "
+PROMPT_COLUMN_TASK_LIMIT = "Task limit: "
+PROMPT_TASK_NAME = "Task name (defaule 'New Task'): "
+
+# INFO TEXTS
+INFO_MOVE_TASK = "Select destination column."
 
 name = "PyBan"
 

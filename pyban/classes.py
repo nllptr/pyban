@@ -6,14 +6,14 @@ class InvalidDirectoryError(Exception):
 
 class Project:
 
-    def __init__(self, project_name):
-        self.project_name = project_name
+    def __init__(self, name):
+        self.name = name
         self.boards = []
         self.active_board = None
 
     def save(self):
         """
-        Saves the state of the board list to [project_dir]
+        Saves the state of the board list to .pyban/.
         """
         if not os.path.isdir(".pyban"):
             os.mkdir(".pyban")
@@ -22,7 +22,7 @@ class Project:
 
     def load(self):
         """
-        Loads a saved board list from [project_dir] and
+        Loads a saved board list from .pyban/ and
         returns True. Returns False if there is no project
         to load.
         """
@@ -31,14 +31,24 @@ class Project:
         else:
             with open(".pyban/pyban.pk", "rb") as f:
                 loaded = pickle.load(f)
-                self.project_name = loaded.project_name
+                self.name = loaded.name
                 self.boards = loaded.boards
                 self.active_board = loaded.active_board
             return True
 
+    def get_active(self):
+        """
+        Returns the active board or None if there
+        is no active board.
+        """
+        if self.active_board == None:
+            return None
+        else:
+            return self.boards[self.active_board]
+
     def __repr__(self):
-        return "".join(["<Board: [project_name: ",
-                        self.project_name,
+        return "".join(["<Board: [name: ",
+                        self.name,
                         "], [boards: ",
                         str(self.boards),
                         "], [active_board: ",
@@ -46,7 +56,7 @@ class Project:
                         "]>"])
 
     def __str__(self):
-        return self.project_name
+        return self.name
 
 class Board:
 
@@ -81,7 +91,11 @@ class Board:
         """
         Moves the task at [from_column], [from_row] to column [to_column].
         """
-        self.columns[to_column].tasks.append(self.columns[from_column].tasks.pop(from_row))
+        if len(to_column.tasks) == to_column.max_simultaneous:
+            return False
+        else:
+            self.columns[to_column].tasks.append(self.columns[from_column].tasks.pop(from_row))
+            return True
 
 class Column:
 
@@ -90,6 +104,7 @@ class Column:
         self.description = description
         self.tasks = []
         self.sub_board = None
+        self.task_limit = 0
 
     def __repr__(self):
         return "".join(["<Column: [name: ",

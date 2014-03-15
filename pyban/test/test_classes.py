@@ -64,6 +64,10 @@ class TestColumn(unittest.TestCase):
         column.sub_board = Board("test-board")
         self.assertEqual("test-board", column.sub_board.name)
 
+    def test_max_simultaneous(self):
+        column = Column()
+        self.assertEqual(2, column.max_simultaneous)
+
     def test_str(self):
         self.assertEqual("Column: Desc", str(Column("Column", "Desc")))
 
@@ -104,6 +108,9 @@ class TestBoard(unittest.TestCase):
         board.columns[0].tasks.append(Task("Hey"))
         board.move_task(0, 0, 1)
         self.assertEqual("Hey", board.columns[1].tasks[0].name)
+        board.columns[1].max_simultaneous = 1
+        board.columns[0].tasks.append(Task("yeah"))
+        self.assertFalse(board.move_task(0, 0, 1))
 
 class TestProject(unittest.TestCase):
     """
