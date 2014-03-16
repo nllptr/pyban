@@ -8,18 +8,18 @@ import strings
 
 def main(stdscr):
     project = Project("New Project")
-    #project.load()
+    project.load()
     #
     # Create test project
     # -------------------
-    project.boards.append(Board("testing", "test description"))
-    project.boards[0].columns[0].tasks.append(Task("test task 1"))
-    project.boards[0].columns[0].tasks.append(Task("test task 2"))
-    project.boards[0].columns[1].tasks.append(Task("test task 3"))
-    project.boards[0].columns[2].tasks.append(Task("test task 4 this is a super duper mega long task name and i need to just to verify that task names are sliced correctly"))
-    project.boards[0].columns[2].tasks.append(Task("test task 5"))
-    project.boards[0].columns[2].tasks.append(Task("test task 6"))
-    project.active_board = 0
+    #project.boards.append(Board("testing", "test description"))
+    #project.boards[0].columns[0].tasks.append(Task("test task 1"))
+    #project.boards[0].columns[0].tasks.append(Task("test task 2"))
+    #project.boards[0].columns[1].tasks.append(Task("test task 3"))
+    #project.boards[0].columns[2].tasks.append(Task("test task 4 this is a super duper mega long task name and i need to just to verify that task names are sliced correctly"))
+    #project.boards[0].columns[2].tasks.append(Task("test task 5"))
+    #project.boards[0].columns[2].tasks.append(Task("test task 6"))
+    #project.active_board = 0
 
     state = constants.BOARD
     selection = [constants.BOARD_SELECT_BOARD, 0, 0]
@@ -191,12 +191,14 @@ def main(stdscr):
                 key = stdscr.getch()
             if key == ord("h"):
                 if selection[1] > 0:
-                    if len(project.get_active().columns[selection[1] - 1].tasks) < project.get_active().columns[selection[1] - 1].task_limit:
-                        project.get_active().columns[selection[1] - 1].tasks.append(project.get_active().columns[selection[1]].tasks.pop(selection[2]))
-            if key == ord("l"):
-                if selection[1] < len(project.get_active().columns) - 1:
-                    if len(project.get_active().columns[selection[1] + 1].tasks) < project.get_active().columns[selection[1] + 1].task_limit:
-                        project.get_active().columns[selection[1] + 1].tasks.append(project.get_active().columns[selection[1]].tasks.pop(selection[2]))
+                    if len(project.get_active().columns[selection[1] - 1].tasks) < int(project.get_active().columns[selection[1] - 1].task_limit) or project.get_active().columns[selection[1] - 1].task_limit == 0:
+                        task = project.get_active().columns[selection[1]].tasks.pop(selection[2])
+                        project.get_active().columns[selection[1] - 1].tasks.append(task)
+            elif key == ord("l"):
+                if selection[1] < (len(project.get_active().columns) - 1):
+                    if len(project.get_active().columns[selection[1] + 1].tasks) < int(project.get_active().columns[selection[1] + 1].task_limit) or project.get_active().columns[selection[1] + 1].task_limit == 0:
+                        task = project.get_active().columns[selection[1]].tasks.pop(selection[2])
+                        project.get_active().columns[selection[1] + 1].tasks.append(task)
             project.save()
             state = constants.BOARD
             continue
@@ -264,7 +266,7 @@ def main(stdscr):
             elif key in (ord("j"), curses.KEY_DOWN):
                 if selection[0] == constants.BOARD_SELECT_BOARD:
                     selection = [constants.BOARD_SELECT_COLUMN, 0, 0]
-                elif selection[0] == constants.BOARD_SELECT_COLUMN:
+                elif selection[0] == constants.BOARD_SELECT_COLUMN and len(project.get_active().columns[selection[1]].tasks) > 0:
                     selection[0] = constants.BOARD_SELECT_TASK
                     selection[2] = 0
                 elif selection[0] == constants.BOARD_SELECT_TASK and selection[2] < len(project.get_active().columns[selection[1]].tasks) - 1:
