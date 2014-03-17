@@ -74,7 +74,7 @@ INFO_MOVE_TASK = "Select destination column."
 
 name = "PyBan"
 
-version = "0.2"
+version = "0.3.0"
 
 unknown_command = "Unknown command. Type \"help\" to see all commands."
 

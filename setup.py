@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='PyBan',
-    version='0.2.0',
+    version='0.3.0',
     author='Simon Wessel',
     author_email='simon.w.karlsson@gmail.com',
     packages=['pyban', 'pyban.test'],
