@@ -10,3 +10,20 @@ Where is everything saved?
 --------------------------
 At the moment, data is pickled and saved into the .pyban folder in the folder
 where you ran pyban. Sort of git-style, because I like that.
+
+How do I use PyBan?
+-------------------
+Install it. Run pyban in your project directory. A ".pyban" directory will be
+created in the folder where you ran pyban. You should be greeted by the prject
+screen. Enter som info about your project and, most importantly, add a board
+(your project can have several boards). Press Q to leave the project screen.
+Here you can select the board heading, the column headings, or individual tasks.
+Once selected you can enter their settings screen to do stuff like renaming,
+adding columns or setting a column's task limit. In the board screen you can
+add tasks to your currently selected column.
+
+From here it should be fairly obvious how to use PyBan as long as you have
+some basic knowledge about Kanban. If you don't know how Kanban works - 
+look it up on Wikipedia.
+
+http://en.wikipedia.org/wiki/Kanban_board might be a good place to start.
