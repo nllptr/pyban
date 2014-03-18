@@ -1,0 +1,27 @@
+===========
+MENU DESIGN
+===========
+
+This document is intended to document the design decisions regarding PyBan's
+menus. First are the more general ideas, then the actual requirements.
+
+Design principles
+=================
+
+* To minimize clutter, only necessary menu items should be shown.
+
+* VIM-like key commands should be the primary means of navigation.
+
+* The keys should be easy to remember
+
+* The menu should be able to fit the width of the terminal window,
+  even on small windows.
+
+
+Menu requirements
+=================
+
+* Only the help command is shown at any one time.
+
+* Depending on what screen the user is on when issuing the help command,
+  different, context sensitive, help screens will be shown.

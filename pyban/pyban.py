@@ -37,10 +37,14 @@ def main(stdscr):
         # ------------
         if state == constants.PROJECT_INFO:
             print_project_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_PROJECT_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
+        elif state == constants.HELP_PROJECT_SETTINGS:
+            print_help(stdscr, strings.HELP_PROJECT_SETTINGS)
+            state = constants.PROJECT_INFO
+            continue
         elif state == constants.SET_PROJECT_NAME:
             print_project_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_PROJECT_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             name = get_input(stdscr, strings.PROMPT_PROJECT_NAME)
             if len(name) > 0:
                 project.name = name
@@ -49,7 +53,7 @@ def main(stdscr):
             continue
         elif state == constants.NEW_BOARD:
             print_project_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_PROJECT_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             name = get_input(stdscr, strings.PROMPT_NEW_BOARD)
             if len(name) > 0:
                 project.boards.append(Board(name))
@@ -73,10 +77,14 @@ def main(stdscr):
         # ----------
         if state == constants.BOARD_INFO:
             print_board_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_BOARD_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
+        elif state == constants.HELP_BOARD_SETTINGS:
+            print_help(stdscr, strings.HELP_BOARD_SETTINGS)
+            state = constants.BOARD_INFO
+            continue
         elif state == constants.SET_BOARD_NAME:
             print_board_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_BOARD_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             name = get_input(stdscr, strings.PROMPT_BOARD_NAME)
             if len(name) > 0:
                 project.get_active().name = name
@@ -85,7 +93,7 @@ def main(stdscr):
             continue
         elif state == constants.SET_BOARD_DESCRIPTION:
             print_board_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_BOARD_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             description = get_input(stdscr, strings.PROMPT_BOARD_DESCRIPTION)
             if len(description) > 0:
                 project.get_active().description = description
@@ -94,7 +102,7 @@ def main(stdscr):
             continue
         elif state == constants.ADD_COLUMN:
             print_board_info(stdscr, project)
-            print_menu(stdscr, strings.MENU_BOARD_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             name = get_input(stdscr, strings.PROMPT_ADD_COLUMN)
             if len(name) > 0:
                 project.get_active().columns.append(Column(name))
@@ -103,15 +111,24 @@ def main(stdscr):
             project.save()
             state = constants.BOARD_INFO
             continue
+        elif state == constants.REMOVE_COLUMN:
+            remove_column(stdscr, project)
+            project.save()
+            state = constants.BOARD_INFO
+            continue
 
         # Column info
         # -----------
         if state == constants.COLUMN_INFO:
             print_column_info(stdscr, project, selection)
-            print_menu(stdscr, strings.MENU_COLUMN_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
+        elif state == constants.HELP_COLUMN_SETTINGS:
+            print_help(stdscr, strings.HELP_COLUMN_SETTINGS)
+            state = constants.COLUMN_INFO
+            continue
         elif state == constants.SET_COLUMN_NAME:
             print_column_info(stdscr, project, selection)
-            print_menu(stdscr, strings.MENU_COLUMN_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             name = get_input(stdscr, strings.PROMPT_COLUMN_NAME)
             if len(name) > 0:
                 project.get_active().columns[selection[1]].name = name
@@ -120,7 +137,7 @@ def main(stdscr):
             continue
         elif state == constants.SET_COLUMN_DESCRIPTION:
             print_column_info(stdscr, project, selection)
-            print_menu(stdscr, strings.MENU_COLUMN_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             description = get_input(stdscr, strings.PROMPT_COLUMN_DESCRIPTION)
             if len(description) > 0:
                 project.get_active().columns[selection[1]].description = description
@@ -129,7 +146,7 @@ def main(stdscr):
             continue
         elif state == constants.SET_COLUMN_TASK_LIMIT:
             print_column_info(stdscr, project, selection)
-            print_menu(stdscr, strings.MENU_COLUMN_INFO)
+            print_menu(stdscr, strings.MENU_TEXT)
             task_limit = get_input(stdscr, strings.PROMPT_COLUMN_TASK_LIMIT)
             if task_limit.isdigit():
                 project.get_active().columns[selection[1]].task_limit = task_limit
@@ -139,6 +156,32 @@ def main(stdscr):
 
         # Task info
         # ---------
+        if state == constants.TASK_INFO:
+            print_task_info(stdscr, project, selection)
+            print_menu(stdscr, strings.MENU_TEXT)
+        elif state == constants.HELP_TASK_SETTINGS:
+            print_help(stdscr, strings.HELP_TASK_SETTINGS)
+            state = constants.TASK_INFO
+            continue
+        elif state == constants.SET_TASK_NAME:
+            print_task_info(stdscr, project, selection)
+            print_menu(stdscr, strings.MENU_TEXT)
+            name = get_input(stdscr, strings.PROMPT_TASK_NAME)
+
+            if len(name) > 0:
+                project.get_active().columns[selection[1]].tasks[selection[2]].name = name
+                project.save()
+            state = constants.TASK_INFO
+            continue
+        elif state == constants.SET_TASK_DESCRIPTION:
+            print_task_info(stdscr, project, selection)
+            print_menu(stdscr, strings.MENU_TEXT)
+            description = get_input(stdscr, strings.PROMPT_TASK_DESCRIPTION)
+            if len(description) > 0:
+                project.get_active().columns[selection[1]].tasks[selection[2]].description = description
+                project.save()
+            state = constants.TASK_INFO
+            continue
 
         # Board view
         # ----------
@@ -146,22 +189,44 @@ def main(stdscr):
             if project.get_active() is not None:
                 print_board(stdscr, project, selection)
                 if selection[0] == constants.BOARD_SELECT_BOARD:
-                    print_menu(stdscr, strings.SELECT_BOARD)
+                    print_menu(stdscr, strings.MENU_TEXT)
                 elif selection[0] == constants.BOARD_SELECT_COLUMN:
-                    print_menu(stdscr, strings.SELECT_COLUMN)
+                    print_menu(stdscr, strings.MENU_TEXT)
                 elif selection[0] == constants.BOARD_SELECT_TASK:
-                    print_menu(stdscr, strings.SELECT_TASK)
+                    print_menu(stdscr, strings.MENU_TEXT)
             else:
                 state = constants.PROJECT_INFO
                 continue
+        elif state == constants.HELP_BOARD:
+            print_help(stdscr, strings.HELP_BOARD)
+            state = constants.BOARD
+            continue
+        elif state == constants.MOVE_COLUMN:
+            print_board(stdscr, project, selection)
+            print_info(stdscr, strings.INFO_MOVE_COLUMN)
+            print_menu(stdscr, strings.MENU_TEXT)
+            key = 0
+            while key not in (ord("h"), ord("l")):
+                key = stdscr.getch()
+            if key == ord("h"):
+                if selection[1] > 0:
+                    project.get_active().columns[selection[1] - 1], project.get_active().columns[selection[1]] = project.get_active().columns[selection[1]], project.get_active().columns[selection[1] - 1]
+                    selection[1] -= 1
+            elif key == ord("l"):
+                if selection[1] < len(project.get_active().columns) - 1:
+                    project.get_active().columns[selection[1]], project.get_active().columns[selection[1] + 1] = project.get_active().columns[selection[1] + 1], project.get_active().columns[selection[1]]
+                    selection[1] += 1
+            project.save()
+            state = constants.BOARD
+            continue
         elif state == constants.ADD_TASK:
             print_board(stdscr, project, selection)
             if selection[0] == constants.BOARD_SELECT_COLUMN:
-                print_menu(stdscr, strings.SELECT_COLUMN)
+                print_menu(stdscr, strings.MENU_TEXT)
             elif selection[0] == constants.BOARD_SELECT_TASK:
-                print_menu(stdscr, strings.SELECT_TASK)
+                print_menu(stdscr, strings.MENU_TEXT)
             if len(project.get_active().columns[selection[1]].tasks) < int(project.get_active().columns[selection[1]].task_limit) or int(project.get_active().columns[selection[1]].task_limit) == 0:
-                name = get_input(stdscr, strings.PROMPT_TASK_NAME)
+                name = get_input(stdscr, strings.PROMPT_ADD_TASK)
                 if len(name) > 0:
                     project.get_active().columns[selection[1]].tasks.append(Task(name))
                 else:
@@ -185,7 +250,7 @@ def main(stdscr):
         elif state == constants.MOVE_TASK:
             print_board(stdscr, project, selection)
             print_info(stdscr, strings.INFO_MOVE_TASK)
-            print_menu(stdscr, strings.MENU_MOVE_TASK)
+            print_menu(stdscr, strings.MENU_TEXT)
             key = 0
             while key not in (ord("h"), ord("l")):
                 key = stdscr.getch()
@@ -216,6 +281,8 @@ def main(stdscr):
         elif state == constants.PROJECT_INFO:
             if key == ord("a"):
                 state = constants.NEW_BOARD
+            elif key == ord("?"):
+                state = constants.HELP_PROJECT_SETTINGS
             elif key == ord("b"):
                 state = constants.SET_ACTIVE_BOARD
             elif key == ord("n"):
@@ -227,24 +294,41 @@ def main(stdscr):
         elif state == constants.BOARD_INFO:
             if key == ord("n"):
                 state = constants.SET_BOARD_NAME
+            elif key == ord("?"):
+                state = constants.HELP_BOARD_SETTINGS
             elif key == ord("q"):
                 state = constants.BOARD
             elif key == ord("d"):
                 state = constants.SET_BOARD_DESCRIPTION
             elif key == ord("a"):
                 state = constants.ADD_COLUMN
+            elif key == ord("r"):
+                state = constants.REMOVE_COLUMN
         elif state == constants.COLUMN_INFO:
             if key == ord("q"):
                 state = constants.BOARD
+            elif key == ord("?"):
+                state = constants.HELP_COLUMN_SETTINGS
             elif key == ord("n"):
                 state = constants.SET_COLUMN_NAME
             elif key == ord("d"):
                 state = constants.SET_COLUMN_DESCRIPTION
             elif key == ord("l"):
                 state = constants.SET_COLUMN_TASK_LIMIT
+        elif state == constants.TASK_INFO:
+            if key == ord("q"):
+                state = constants.BOARD
+            elif key == ord("?"):
+                state = constants.HELP_TASK_SETTINGS
+            elif key == ord("n"):
+                state = constants.SET_TASK_NAME
+            elif key == ord("d"):
+                state = constants.SET_TASK_DESCRIPTION
         elif state == constants.BOARD:
             if key == ord("q"):
                 break
+            elif key == ord("?"):
+                state = constants.HELP_BOARD
             elif key == ord("p"):
                 state = constants.PROJECT_INFO
             elif key == ord("s"):
@@ -261,7 +345,9 @@ def main(stdscr):
                 if selection[0] == constants.BOARD_SELECT_TASK:
                     state = constants.REMOVE_TASK
             elif key == ord("m"):
-                if selection[0] == constants.BOARD_SELECT_TASK:
+                if selection[0] == constants.BOARD_SELECT_COLUMN:
+                    state = constants.MOVE_COLUMN
+                elif selection[0] == constants.BOARD_SELECT_TASK:
                     state = constants.MOVE_TASK
             elif key in (ord("j"), curses.KEY_DOWN):
                 if selection[0] == constants.BOARD_SELECT_BOARD:
@@ -282,13 +368,20 @@ def main(stdscr):
             elif key in (ord("l"), curses.KEY_RIGHT):
                 if selection[0] != constants.BOARD_SELECT_BOARD:
                     if selection[1] < len(project.get_active().columns) - 1:
-                        if selection[2] > len(project.get_active().columns[selection[1] + 1].tasks) - 1:
+                        if len(project.get_active().columns[selection[1] + 1].tasks) == 0:
+                            selection[2] = 0
+                            selection[0] = constants.BOARD_SELECT_COLUMN
+                            
+                        elif selection[2] > len(project.get_active().columns[selection[1] + 1].tasks) - 1:
                             selection[2] = len(project.get_active().columns[selection[1] + 1].tasks) - 1
                         selection[1] += 1
             elif key in (ord("h"), curses.KEY_LEFT):
                 if selection[0] != constants.BOARD_SELECT_BOARD:
                     if selection[1] > 0:
-                        if selection[2] > len(project.get_active().columns[selection[1] - 1].tasks) - 1:
+                        if len(project.get_active().columns[selection[1] - 1].tasks) == 0:
+                            selection[2] = 0
+                            selection[0] = constants.BOARD_SELECT_COLUMN
+                        elif selection[2] > len(project.get_active().columns[selection[1] - 1].tasks) - 1:
                             selection[2] = len(project.get_active().columns[selection[1] - 1].tasks) - 1
                         selection[1] -= 1
 
@@ -447,6 +540,15 @@ def print_column_info(stdscr, project, selection):
     stdscr.addstr(5, 1, "Column task limit:", curses.A_UNDERLINE)
     stdscr.addstr("".join([" ", str(project.get_active().columns[selection[1]].task_limit)]))
 
+def print_task_info(stdscr, project, selection):
+    """
+    Prints the task info.
+    """
+    stdscr.addstr(1, 1, "Task name:", curses.A_UNDERLINE)
+    stdscr.addstr("".join([" ", project.get_active().columns[selection[1]].tasks[selection[2]].name]))
+    stdscr.addstr(3, 1, "Task description:", curses.A_UNDERLINE)
+    stdscr.addstr("".join([" ", project.get_active().columns[selection[1]].tasks[selection[2]].description]))
+
 def print_box(stdscr, y, x, print_string, attribute=None):
     """
     Prints a string inside a box with its upper left corners
@@ -467,8 +569,50 @@ def print_box(stdscr, y, x, print_string, attribute=None):
     for i in range(print_chars):
         stdscr.addch(curses.ACS_HLINE)
     stdscr.addch(curses.ACS_LRCORNER)
+def print_menu(stdscr, menu_text):
+    """
+    Prints a text in the last row of the terminal window.
+    """
+    stdscr.addstr(stdscr.getmaxyx()[0] - 1, 1, strings.MENU_TEXT)
 
-def print_menu(stdscr, menu):
+def print_help(stdscr, string):
+    """
+    Prints the given help string.
+    """
+    # 1. re-format string to fit the current terminal window
+    # # 2. create pad
+    # 3. add string to pad
+    # # 4. listen for j/k/q
+    # # 5. if q, go back to board view
+    # 6. if j, move pad up (scroll down)
+    # 7. if k, move pad down (scroll up)
+    lines = string.splitlines()
+    text_height = len(lines) + 2
+    text_width = 72
+    max_yx = stdscr.getmaxyx()
+    help_pad = curses.newpad(text_height, text_width)
+    scroll = 0
+    while True:
+        help_pad.clear()
+        help_pad.border(0)
+        for index, line in enumerate(lines):
+            help_pad.addstr(index + 1, 2, lines[index])
+        help_pad.refresh(scroll, 0, 0, 0, text_height, text_width)
+        key = 0
+        key = help_pad.getch()
+        if key == ord("q"):
+            break
+        elif key == ord("j"):
+            #scroll -= 1
+            pass
+        elif key == ord("k"):
+            #scroll += 1
+            pass
+
+# ========================
+# WILL PROBABLY BE REMOVED
+# ========================
+def print_menu2(stdscr, menu):
     """
     Prints a menu. Menu texts are defined in strings.py.
     Menu definitions are lists of strings. One letter in each string
@@ -509,7 +653,7 @@ def select_board(stdscr, project):
     while key != 10:
         stdscr.clear()
         print_project_info(stdscr, project)
-        print_menu(stdscr, strings.MENU_SELECT)
+        print_menu(stdscr, strings.MENU_TEXT)
         stdscr.addstr(selection + 3, 4, str(project.boards[selection]), curses.A_REVERSE)
         key = stdscr.getch()
         if selection == 0:
@@ -536,7 +680,7 @@ def remove_board(stdscr, project):
     while key != 10:
         stdscr.clear()
         print_project_info(stdscr, project)
-        print_menu(stdscr, strings.MENU_SELECT)
+        print_menu(stdscr, strings.MENU_TEXT)
         stdscr.addstr(selection + 3, 4, str(project.boards[selection]), curses.A_REVERSE)
         key = stdscr.getch()
         if selection == 0:
@@ -551,6 +695,34 @@ def remove_board(stdscr, project):
             if key in (curses.KEY_UP, ord("k")):
                 selection -= 1
     project.boards.pop(selection)
+
+def remove_column(stdscr, project):
+    """
+    Lets the user select a column and removes it.
+    """
+
+    selection = 0
+
+    key = 0
+    while key != 10:
+        stdscr.clear()
+        print_board_info(stdscr, project)
+        print_menu(stdscr, strings.MENU_TEXT)
+        stdscr.addstr(selection + 6, 1, project.get_active().columns[selection].name, curses.A_REVERSE)
+        key = stdscr.getch()
+        if selection == 0:
+            if key in (curses.KEY_DOWN, ord("j")):
+                selection += 1
+        elif selection == (len(project.get_active().columns) - 1):
+            if key in (curses.KEY_UP, ord("k")):
+                selection -= 1
+        else:
+            if key in (curses.KEY_DOWN, ord("j")):
+                selection += 1
+            if key in (curses.KEY_UP, ord("k")):
+                selection -= 1
+    project.get_active().columns.pop(selection)
+
 
 if __name__ == "__main__":
     curses.wrapper(main)

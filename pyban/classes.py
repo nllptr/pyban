@@ -13,11 +13,12 @@ class Project:
 
     def save(self):
         """
-        Saves the state of the board list to .pyban/.
+        Saves the state of the board list to ~/.pyban
         """
-        if not os.path.isdir(".pyban"):
-            os.mkdir(".pyban")
-        with open(".pyban/pyban.pk", "wb") as f:
+        pyban_dir = "".join([os.path.expanduser("~"), "/.pyban/"])
+        if not os.path.isdir(pyban_dir):
+            os.mkdir(pyban_dir)
+        with open("".join([pyban_dir, "pyban.pk"]), "wb") as f:
             pickle.dump(self, f, pickle.HIGHEST_PROTOCOL)
 
     def load(self):
@@ -26,10 +27,11 @@ class Project:
         returns True. Returns False if there is no project
         to load.
         """
-        if not os.path.isdir(".pyban"):
+        pyban_dir = "".join([os.path.expanduser("~"), "/.pyban/"])
+        if not os.path.isdir(pyban_dir):
             return False
         else:
-            with open(".pyban/pyban.pk", "rb") as f:
+            with open("".join([pyban_dir, "pyban.pk"]), "rb") as f:
                 loaded = pickle.load(f)
                 self.name = loaded.name
                 self.boards = loaded.boards
