@@ -2,6 +2,8 @@
 PyBan - Kanban with Python!
 ===========================
 
+Please note: PyBan is written in Python3.
+
 PyBan is a Kanban board management tool for the command line.
 Its interface is implemented in curses.
 
